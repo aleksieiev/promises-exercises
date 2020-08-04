@@ -8,7 +8,7 @@
  */
 function mapPromise(promise, transformer){
   return new Promise((resolve, reject) => {
-    /* IMPLEMENT ME!! */
+    return promise.catch(reason => reject(reason)).then((param)=> transformer(param)).then(value => resolve(value)).catch(reason => reject(reason));
   });
 }
 
@@ -19,20 +19,23 @@ function mapPromise(promise, transformer){
  * @param {Promise<number | string>} numberPromise 
  * @returns {Promise<number>}
  */
-function squarePromise(numberPromise){
-  return numberPromise
-    .then(/* IMPLEMENT ME! */);
+function squarePromise(numberPromise) {
+
+  return numberPromise.catch(reason => Promise.reject(reason))
+    .then(value => Number.isInteger(+value) ? Promise.resolve(Math.pow(+value, 2)) :
+      Promise.reject(`Cannot convert '${value}' to a number!`));
 }
 
 /**
  * EXERCISE 3
  * 
- * @param {Promise<number | string>} numberPromise 
+ * @param {Promise<number | string>} promise
  * @returns {Promise<number>}
  */
-function squarePromiseOrZero(promise){
+function squarePromiseOrZero(promise) {
   return squarePromise(promise)
-    .catch(/* IMPLEMENT ME! */);
+    .catch(() => Promise.resolve(0))
+    .then(value => Promise.resolve(value));
 }
 
 /**
@@ -42,7 +45,7 @@ function squarePromiseOrZero(promise){
  * @returns {Promise}
  */
 function switcheroo(promise){
-  return promise.then(/* IMPLEMENT ME */);
+  return promise.then(value => Promise.reject(value), reason => Promise.resolve(reason));
 }
 
 /**
